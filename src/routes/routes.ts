@@ -14,6 +14,18 @@ import {
   getLocation,
   getLocationById,
 } from "../controllers/locationControllers";
+import {
+  createLanuage,
+  deleteLanuage,
+  getLanguageById,
+  getLanguages,
+} from "../controllers/languageControllers";
+import {
+  createGenres,
+  deleteGenres,
+  getGenres,
+  getGenresById,
+} from "../controllers/genresControllers";
 const router = express.Router();
 
 router.get("/", getAPi);
@@ -123,6 +135,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
 });
 
 //location API
+
 /**
  * @swagger
  * /getLocation:
@@ -201,6 +214,179 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *       404:
  *         description: Location not found
  */
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Language
+ *     description: Language management APIs
+ *   - name: Genre
+ *     description: Genre management APIs
+ */
+
+/**
+ * @swagger
+ * /getLanguages:
+ *   get:
+ *     summary: Get all languages
+ *     tags: [Language]
+ *     responses:
+ *       200:
+ *         description: List of languages retrieved successfully
+ */
+
+/**
+ * @swagger
+ * /createLanuage:
+ *   post:
+ *     summary: Create a new language
+ *     tags: [Language]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "English"
+ *     responses:
+ *       201:
+ *         description: Language created successfully
+ *       403:
+ *         description: Access denied
+ */
+
+/**
+ * @swagger
+ * /getLanguageById/{id}:
+ *   get:
+ *     summary: Get language by ID
+ *     tags: [Language]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Language found
+ *       400:
+ *         description: Invalid ID format
+ *       404:
+ *         description: Language not found
+ */
+
+/**
+ * @swagger
+ * /deleteLanuage/{id}:
+ *   delete:
+ *     summary: Delete language by ID
+ *     tags: [Language]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Language deleted successfully
+ *       403:
+ *         description: Access denied
+ *       404:
+ *         description: Language not found
+ */
+
+/**
+ * @swagger
+ * /getGenres:
+ *   get:
+ *     summary: Get all genres
+ *     tags: [Genre]
+ *     responses:
+ *       200:
+ *         description: List of genres retrieved successfully
+ */
+
+/**
+ * @swagger
+ * /createGenres:
+ *   post:
+ *     summary: Create a new genre
+ *     tags: [Genre]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Action"
+ *     responses:
+ *       201:
+ *         description: Genre created successfully
+ *       403:
+ *         description: Access denied
+ */
+
+/**
+ * @swagger
+ * /getGenresById/{id}:
+ *   get:
+ *     summary: Get genre by ID
+ *     tags: [Genre]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Genre found
+ *       400:
+ *         description: Invalid ID format
+ *       404:
+ *         description: Genre not found
+ */
+
+/**
+ * @swagger
+ * /deleteGenres/{id}:
+ *   delete:
+ *     summary: Delete genre by ID
+ *     tags: [Genre]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Genre deleted successfully
+ *       403:
+ *         description: Access denied
+ *       404:
+ *         description: Genre not found
+ */
 router.get("/getLocation", getLocation);
 router.post(
   "/createLocation",
@@ -210,5 +396,17 @@ router.post(
 );
 router.get("/getLocationById/:id", verifyAdmin, getLocationById);
 router.delete("/deleteLocationById/:id", verifyAdmin, deleteLocationById);
+
+//Language API
+router.get("/getLanguages", getLanguages);
+router.post("/createLanuage", verifyAdmin, createLanuage);
+router.get("/getLanguageById/:id", verifyAdmin, getLanguageById);
+router.delete("/deleteLanuage/:id", verifyAdmin, deleteLanuage);
+
+//Genres API
+router.get("/getGenres", getGenres);
+router.post("/createGenres", verifyAdmin, createGenres);
+router.get("/getGenresById/:id", verifyAdmin, getGenresById);
+router.delete("/deleteGenres/:id", verifyAdmin, deleteGenres);
 
 export default router;

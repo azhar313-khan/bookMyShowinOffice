@@ -1,18 +1,18 @@
-import { Request, Response } from "express";
-import Location from "../models/Location";
+import { Response, Request } from "express";
+import Genres from "../models/Genres";
 import { AuthenticatedRequest } from "../utils/AuthenticatedRequest";
 
-export const getLocation = async (req: Request, res: Response) => {
+export const getGenres = async (req: Request, res: Response) => {
   try {
-    const locations = await Location.find();
-    res.status(200).json({ message: "Get Location Successfully", locations });
+    const genres = await Genres.find();
+    res.status(200).json({ message: "Get Location Successfully", genres });
   } catch (err) {
     console.log(err, "error");
     res.status(404).json({ message: "server error", err });
   }
 };
 
-export const createLocation = async (
+export const createGenres = async (
   req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
@@ -23,18 +23,20 @@ export const createLocation = async (
       });
       return;
     }
-    const { city } = req.body;
-    if (!city) {
+
+    const { name } = req.body;
+    if (!name) {
       res.status(403).json({
-        error: "City Name is required",
+        error: "Genres Name is required",
       });
-      return;
     }
-    const cityIcon = req.file ? `/uploads/${req.file.filename}` : null;
-    const LocationData = await Location.create({ city, cityIcon });
+    const genresData = await Genres.create({
+      name,
+    });
+
     res.status(201).json({
-      message: "Location Create Successfully",
-      LocationData,
+      message: "Genres Add Successfully",
+      genresData,
     });
   } catch (err) {
     console.log(err, "error");
@@ -42,10 +44,10 @@ export const createLocation = async (
   }
 };
 
-export const getLocationById = async (
+export const getGenresById = async (
   req: AuthenticatedRequest,
   res: Response
-): Promise<void> => {
+) => {
   try {
     if (!req.user || req.user.role !== "admin") {
       res.status(403).json({
@@ -53,21 +55,19 @@ export const getLocationById = async (
       });
       return;
     }
-    const location = await Location.findById(req.params.id);
-    if (!location) {
-      res.status(403).json({
-        error: "Location not Found.",
-      });
-      return;
-    }
-    res.status(200).json({ message: "Get Location Successfully", location });
+    const genresId = req.params.id;
+    const genres = await Genres.findById(genresId);
+    res.status(201).json({
+      message: "Get Genres by Id Successfully",
+      genres,
+    });
   } catch (err) {
     console.log(err, "error");
     res.status(404).json({ message: "server error", err });
   }
 };
 
-export const deleteLocationById = async (
+export const deleteGenres = async (
   req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
@@ -78,8 +78,8 @@ export const deleteLocationById = async (
       });
       return;
     }
-    const LocationData = await Location.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Delete Location Successfully" });
+    const genres = await Genres.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Delete Genres Successfully" });
   } catch (err) {
     console.log(err, "error");
     res.status(404).json({ message: "server error", err });
