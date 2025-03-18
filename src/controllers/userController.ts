@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 
 const secretKey = process.env.JWT_SECRET || "test";
 
-const generateToken = (userId: any) => {
-  return jwt.sign({ id: userId }, secretKey, {
+const generateToken = (userId: any, role: any) => {
+  return jwt.sign({ id: userId, role }, secretKey, {
     expiresIn: "1h",
   });
 };
@@ -19,7 +19,7 @@ export const getAPi = (req: Request, res: Response) => {
 };
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
-    let { name, email, password } = req.body;
+    let { name, email, password, role = "user" } = req.body;
     password = String(password);
     if (!password || typeof password !== "string") {
       res.status(402).json({
@@ -42,8 +42,9 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
       name,
       email,
       password: hashPassword,
+      role,
     });
-    const token = generateToken((await user)._id);
+    const token = generateToken(user?._id, user?.role);
     res.status(201).json({
       message: "User Registration Successfully",
       user,
@@ -73,7 +74,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-    const token = await generateToken(userExit._id);
+    const token = await generateToken(userExit._id, userExit.role);
     res.status(200).json({
       message: "Login Successfully ",
       token,
@@ -89,9 +90,9 @@ export const updateProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name, password, email } = req.body;
+    let { name, password, email } = req.body;
     const userId = req.params.id;
-    const user = await User.findById(userId);
+    let user: any = await User.findById(userId);
     if (!user) {
       res.status(401).json({
         message: "User not find",
@@ -106,6 +107,10 @@ export const updateProfile = async (
       const hashPassword = await bcrypt.hash(password, salt);
       user.password = hashPassword;
     }
+    if (req.file) {
+      user.profilePicture = `/uploads/${req.file.filename}`;
+    }
+
     await user.save();
     res.status(201).json({
       message: "Profile Update Successfully",

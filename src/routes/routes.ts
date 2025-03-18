@@ -6,6 +6,14 @@ import {
   updateProfile,
 } from "../controllers/userController";
 import upload from "../utils/upload";
+import { AuthenticatedRequest } from "../utils/AuthenticatedRequest";
+import { verifyAdmin } from "../utils/verifyAdmin";
+import {
+  createLocation,
+  deleteLocationById,
+  getLocation,
+  getLocationById,
+} from "../controllers/locationControllers";
 const router = express.Router();
 
 router.get("/", getAPi);
@@ -109,5 +117,98 @@ router.put(
   upload.single("profilePicture"),
   updateProfile
 );
+
+router.get("/admin-dashboard", verifyAdmin, (req, res) => {
+  res.json({ message: "Welcome, Admin!" });
+});
+
+//location API
+/**
+ * @swagger
+ * /getLocation:
+ *   get:
+ *     summary: Retrieve all locations
+ *     description: Fetches a list of all locations
+ *     responses:
+ *       200:
+ *         description: List of locations retrieved successfully
+ */
+
+/**
+ * @swagger
+ * /createLocation:
+ *   post:
+ *     summary: Create a new location
+ *     description: Creates a location with an optional city icon upload
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "New York"
+ *               cityIcon:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Location created successfully
+ */
+
+/**
+ * @swagger
+ * /getLocationById/{id}:
+ *   get:
+ *     summary: Get location by ID
+ *     description: Retrieves details of a specific location by ID
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Location details retrieved successfully
+ *       404:
+ *         description: Location not found
+ */
+
+/**
+ * @swagger
+ * /deleteLocationById/{id}:
+ *   delete:
+ *     summary: Delete a location
+ *     description: Deletes a specific location by ID
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Location deleted successfully
+ *       404:
+ *         description: Location not found
+ */
+router.get("/getLocation", getLocation);
+router.post(
+  "/createLocation",
+  verifyAdmin,
+  upload.single("cityIcon"),
+  createLocation
+);
+router.get("/getLocationById/:id", verifyAdmin, getLocationById);
+router.delete("/deleteLocationById/:id", verifyAdmin, deleteLocationById);
 
 export default router;
