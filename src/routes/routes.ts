@@ -26,6 +26,12 @@ import {
   getGenres,
   getGenresById,
 } from "../controllers/genresControllers";
+import {
+  createReview,
+  deleteReview,
+  getReviewByMovieId,
+} from "../controllers/reviewControllers";
+import { createMovie } from "../controllers/movieControllers";
 const router = express.Router();
 
 router.get("/", getAPi);
@@ -408,5 +414,224 @@ router.get("/getGenres", getGenres);
 router.post("/createGenres", verifyAdmin, createGenres);
 router.get("/getGenresById/:id", verifyAdmin, getGenresById);
 router.delete("/deleteGenres/:id", verifyAdmin, deleteGenres);
+
+//Review API
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Language
+ *     description: Language management APIs
+ *   - name: Genre
+ *     description: Genre management APIs
+ *   - name: Review
+ *     description: Review management APIs
+ */
+/**
+ * @swagger
+ * /reviews:
+ *   post:
+ *     summary: Add a movie review
+ *     description: Adds a review for a movie by an authenticated user.
+ *     security:
+ *       - BearerAuth: []
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               movieId:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *                 minimum: 1
+ *                 maximum: 5
+ *               reviewText:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Review added successfully
+ *       400:
+ *         description: Bad request
+ */
+/**
+ * @swagger
+ * /reviews/{movieId}:
+ *   get:
+ *     summary: Get all reviews for a movie
+ *     description: Retrieves all reviews for a given movie.
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     tags: [Review]
+ *     responses:
+ *       200:
+ *         description: List of reviews retrieved successfully
+ */
+
+/**
+ * @swagger
+ * /reviews/{id}:
+ *   delete:
+ *     summary: Delete a review
+ *     description: Allows a user to delete their own review.
+ *     security:
+ *       - BearerAuth: []
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Review deleted successfully
+ *       403:
+ *         description: Unauthorized
+ */
+router.post("/createReview", verifyAdmin, createReview);
+router.get("/getReviewByMovieId/:movieId", getReviewByMovieId);
+router.delete("/deleteReview/:id", deleteReview);
+
+//Movie
+/**
+ * @swagger
+ * /createMovie:
+ *   post:
+ *     summary: Create a new movie
+ *     description: Adds a new movie with title, description, language, genre, and an image file.
+ *     tags:
+ *       - Movies
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - language
+ *               - genres
+ *               - duration
+ *               - releaseDate
+ *               - certificate
+ *               - rating
+ *               - total_review
+ *               - review
+ *               - status
+ *               - movie_image
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Inception"
+ *               description:
+ *                 type: string
+ *                 example: "A thief enters the subconscious to steal secrets."
+ *               language:
+ *                 type: string
+ *                 example: "67d941b7ddbe19c5c095c26c"
+ *               genres:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["67d95469d15a53ef0010c508", "67d95486d15a53ef0010c50c"]
+ *               duration:
+ *                 type: integer
+ *                 example: 148
+ *               releaseDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2010-07-16T00:00:00.000Z"
+ *               certificate:
+ *                 type: string
+ *                 example: "PG-13"
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 example: 4.8
+ *               total_review:
+ *                 type: integer
+ *                 example: 2000
+ *               review:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: []
+ *               status:
+ *                 type: boolean
+ *                 example: true
+ *               movie_image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       "201":
+ *         description: Movie created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Movie created successfully"
+ *                 movie:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "60d5ec49b4d3f0298c123456"
+ *                     title:
+ *                       type: string
+ *                       example: "Inception"
+ *                     movie_image:
+ *                       type: string
+ *                       example: "/uploads/1712637471461-image.jpeg"
+ *       "400":
+ *         description: Bad request (validation errors)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Movie image is required."
+ *       "401":
+ *         description: Unauthorized (Admin token required)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized. Admin access required."
+ *       "500":
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.post(
+  "/createMovie",
+  verifyAdmin,
+  upload.single("movie_image"),
+  createMovie
+);
 
 export default router;
