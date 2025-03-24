@@ -73,13 +73,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     let { email, password } = req.body;
     password = String(password);
-    const validator = loginValidator({ email, password });
-    if (validator.error) {
-      res.status(402).json({
-        message: validator.error.details[0].message,
-      });
-      return;
-    }
+    // const validator = loginValidator({ email, password });
+    // if (validator.error) {
+    //   res.status(402).json({
+    //     message: validator.error.details[0].message,
+    //   });
+    //   return;
+    // }
     const userExit = await User.findOne({ email });
     if (!userExit) {
       res.status(401).json({
