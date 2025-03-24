@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { loginValidator, signUpValidator } from "../utils/validation";
 
 const secretKey = process.env.JWT_SECRET || "test";
 
@@ -20,6 +21,18 @@ export const getAPi = (req: Request, res: Response) => {
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
     let { name, email, password, role = "user" } = req.body;
+    const result = signUpValidator({
+      name,
+      email,
+      password,
+    });
+
+    if (result.error) {
+      res.status(402).json({
+        message: result.error.details[0].message,
+      });
+      return;
+    }
     password = String(password);
     if (!password || typeof password !== "string") {
       res.status(402).json({
@@ -60,6 +73,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     let { email, password } = req.body;
     password = String(password);
+    const validator = loginValidator({ email, password });
+    if (validator.error) {
+      res.status(402).json({
+        message: validator.error.details[0].message,
+      });
+      return;
+    }
     const userExit = await User.findOne({ email });
     if (!userExit) {
       res.status(401).json({
