@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import dbConfig from "./dbConfig/dbConfig";
 import router from "./routes/routes";
 import { setupSwagger } from "./utils/swagger";
+import cors from "cors";
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 dbConfig();
 
 app.use(express.json());
+app.use(cors());
 
 // Initialize Swagger
 setupSwagger(app);
