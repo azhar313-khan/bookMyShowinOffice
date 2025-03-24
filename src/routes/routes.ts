@@ -168,7 +168,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               city:
  *                 type: string
  *                 example: "New York"
  *               cityIcon:
@@ -248,7 +248,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Create a new language
  *     tags: [Language]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -256,7 +256,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               LanguageName:
  *                 type: string
  *                 example: "English"
  *     responses:
@@ -273,7 +273,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Get language by ID
  *     tags: [Language]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -296,7 +296,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Delete language by ID
  *     tags: [Language]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -330,7 +330,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Create a new genre
  *     tags: [Genre]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -355,7 +355,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Get genre by ID
  *     tags: [Genre]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -378,7 +378,7 @@ router.get("/admin-dashboard", verifyAdmin, (req, res) => {
  *     summary: Delete genre by ID
  *     tags: [Genre]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

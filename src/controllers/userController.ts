@@ -9,7 +9,7 @@ const secretKey = process.env.JWT_SECRET || "test";
 
 const generateToken = (userId: any, role: any) => {
   return jwt.sign({ id: userId, role }, secretKey, {
-    expiresIn: "1h",
+    expiresIn: "2h",
   });
 };
 
