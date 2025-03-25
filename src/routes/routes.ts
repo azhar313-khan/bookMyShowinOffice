@@ -31,7 +31,13 @@ import {
   deleteReview,
   getReviewByMovieId,
 } from "../controllers/reviewControllers";
-import { createMovie } from "../controllers/movieControllers";
+import {
+  createMovie,
+  deleteMovie,
+  getMovieById,
+  getMovies,
+  updateMovieById,
+} from "../controllers/movieControllers";
 const router = express.Router();
 
 router.get("/", getAPi);
@@ -633,5 +639,126 @@ router.post(
   upload.single("movie_image"),
   createMovie
 );
+/**
+ * @swagger
+ * /getMovie:
+ *   get:
+ *     summary: Get all movies
+ *     tags: [Movies]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved movies
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/getMovie", getMovies);
+
+/**
+ * @swagger
+ * /getMovieById/{id}:
+ *   get:
+ *     summary: Get a movie by ID
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The movie ID
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved movie
+ *       404:
+ *         description: Movie not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/getMovieById/:id", getMovieById);
+
+// /**
+//  * @swagger
+//  * /updateMovieById/{id}:
+//  *   put:
+//  *     summary: Update a movie by ID
+//  *     tags: [Movies]
+//  *     parameters:
+//  *       - in: path
+//  *         name: id
+//  *         required: true
+//  *         schema:
+//  *           type: string
+//  *         description: The movie ID
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         multipart/form-data:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               title:
+//  *                 type: string
+//  *               description:
+//  *                 type: string
+//  *               language:
+//  *                 type: string
+//  *               genres:
+//  *                 type: array
+//  *                 items:
+//  *                   type: string
+//  *               duration:
+//  *                 type: integer
+//  *               releaseDate:
+//  *                 type: string
+//  *                 format: date
+//  *               certificate:
+//  *                 type: string
+//  *               rating:
+//  *                 type: number
+//  *               total_review:
+//  *                 type: integer
+//  *               status:
+//  *                 type: boolean
+//  *               movie_image:
+//  *                 type: string
+//  *                 format: binary
+//  *     responses:
+//  *       200:
+//  *         description: Movie updated successfully
+//  *       400:
+//  *         description: Bad request
+//  *       404:
+//  *         description: Movie not found
+//  *       500:
+//  *         description: Internal server error
+//  */
+// router.put(
+//   "/updateMovieById/:id",
+//   upload.single("movie_image"),
+//   updateMovieById
+// );
+
+// /**
+//  * @swagger
+//  * /deleteMovie/{id}:
+//  *   delete:
+//  *     summary: Delete a movie by ID
+//  *     tags: [Movies]
+//  *     parameters:
+//  *       - in: path
+//  *         name: id
+//  *         required: true
+//  *         schema:
+//  *           type: string
+//  *         description: The movie ID
+//  *     responses:
+//  *       200:
+//  *         description: Movie deleted successfully
+//  *       404:
+//  *         description: Movie not found
+//  *       500:
+//  *         description: Internal server error
+//  */
+// router.delete("/deleteMovie/:id", deleteMovie);
 
 export default router;

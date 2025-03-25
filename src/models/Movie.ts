@@ -20,7 +20,7 @@ const MovieSchema = new Schema(
     title: { type: String, required: true },
     description: { type: String },
     language: { type: mongoose.Schema.Types.ObjectId, ref: "Language" },
-    genres: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }], // Ensure array of ObjectIds
+    genres: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genres" }], // Ensure array of ObjectIds
     duration: { type: Number, required: true }, // Duration in minutes
     releaseDate: { type: Date, required: true },
     certificate: { type: String }, // Example: "U", "PG-13", "R"
@@ -28,6 +28,7 @@ const MovieSchema = new Schema(
     review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }], // Ensure array of ObjectIds
     total_review: { type: Number, default: 0 },
     status: { type: Boolean, default: true }, // Ensure Boolean field
+    movie_image: { type: String, defult: null },
   },
   { timestamps: true }
 );
